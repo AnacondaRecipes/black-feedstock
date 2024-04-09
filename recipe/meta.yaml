@@ -30,7 +30,6 @@ requirements:
     - pip
     - hatchling >=1.20.0
     - hatch-vcs
-    - wheel
   run:
     - python
     - click >=8.0.0
