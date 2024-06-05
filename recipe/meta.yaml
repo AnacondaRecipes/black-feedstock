@@ -1,6 +1,5 @@
 {% set name = "black" %}
-{% set version = "24.3.0" %}
-{% set sha256 = "a0c9c4a0771afc6919578cec71ce82a3e31e054904e7197deacbc9382671c41f" %}
+{% set version = "24.4.2" %}
 
 package:
   name: {{ name|lower }}
@@ -8,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  sha256: c872b53057f000085da66a19c55d68f6f8ddcac2642392ad3a355878406fbd4d
   patches:
     - patches/001-remove-fancy-pypi-readme.patch
 
@@ -24,7 +23,6 @@ requirements:
   build:
     - patch                # [unix]
     - m2-patch             # [win]
-
   host:
     - python
     - pip
@@ -37,19 +35,18 @@ requirements:
     - packaging >=22.0
     - pathspec >=0.9.0
     - platformdirs >=2
-    - tomli >=1.1.0 # [py<311]
+    - tomli >=1.1.0             # [py<311]
     - typing_extensions >=4.0.1 # [py<311]
   run_constrained:
-    - aiohttp >=3.7.4 # for blackd
-    - colorama >=0.4.3 # for colorama extra
-    - uvloop >=0.15.2 # for uvloop extra
-    - ipython >=7.8.0 # for jupyter extra
+    - aiohttp >=3.7.4     # for blackd
+    - colorama >=0.4.3    # for colorama extra
+    - uvloop >=0.15.2     # for uvloop extra
+    - ipython >=7.8.0     # for jupyter extra
     - tokenize-rt >=3.2.0 # for jupyter extra
 test:
   imports:
     - black
   requires:
-    - python
     - pip
   commands:
     - black --help
@@ -60,8 +57,7 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  summary: 'The Uncompromising Code Formatter'
-
+  summary: The Uncompromising Code Formatter
   description: |
     Black is the uncompromising Python code formatter. By using it, you agree
     to cease control over minutiae of hand-formatting. In return, Black gives
