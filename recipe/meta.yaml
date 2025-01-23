@@ -1,5 +1,5 @@
 {% set name = "black" %}
-{% set version = "24.8.0" %}
+{% set version = "24.10.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,13 +7,13 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 2500945420b6784c38b9ee885af039f5e7471ef284ab03fa35ecdde4688cd83f
+  sha256: 846ea64c97afe3bc677b761787993be4991810ecc7a4a937816dd6bddedc4875
   patches:
     - patches/001-remove-fancy-pypi-readme.patch
 
 build:
   number: 0
-  skip: True # [py<38]
+  skip: True # [py<39]
   script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
   entry_points:
     - black = black:patched_main
@@ -28,6 +28,7 @@ requirements:
     - pip
     - hatchling >=1.20.0
     - hatch-vcs
+    - hatch-fancy-pypi-readme
   run:
     - python
     - click >=8.0.0
@@ -35,8 +36,9 @@ requirements:
     - packaging >=22.0
     - pathspec >=0.9.0
     - platformdirs >=2
-    - tomli >=1.1.0             # [py<311]
+    - tomli >=1.1.0
     - typing_extensions >=4.0.1 # [py<311]
+    - typing-extensions >=4.0.1
   run_constrained:
     - aiohttp >=3.7.4     # for blackd
     - colorama >=0.4.3    # for colorama extra
