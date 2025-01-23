@@ -38,7 +38,6 @@ requirements:
     - platformdirs >=2
     - tomli >=1.1.0  # [py<311]
     - typing_extensions >=4.0.1 # [py<311]
-    - typing-extensions >=4.0.1
   run_constrained:
     - aiohttp >=3.7.4     # for blackd
     - colorama >=0.4.3    # for colorama extra
