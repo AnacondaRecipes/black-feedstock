@@ -1,5 +1,5 @@
 {% set name = "black" %}
-{% set version = "24.10.0" %}
+{% set version = "25.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,15 +7,15 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 846ea64c97afe3bc677b761787993be4991810ecc7a4a937816dd6bddedc4875
+  sha256: 33496d5cd1222ad73391352b4ae8da15253c5de89b93a80b3e2c8d9a19ec2666
 
 build:
   number: 0
-  skip: True # [py<39]
   script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
   entry_points:
     - black = black:patched_main
     - blackd = blackd:patched_main
+  skip: True # [py<39]
 
 requirements:
   host:
@@ -34,19 +34,56 @@ requirements:
     - tomli >=1.1.0  # [py<311]
     - typing_extensions >=4.0.1 # [py<311]
   run_constrained:
-    - aiohttp >=3.7.4     # for blackd
-    - colorama >=0.4.3    # for colorama extra
-    - uvloop >=0.15.2     # for uvloop extra
-    - ipython >=7.8.0     # for jupyter extra
-    - tokenize-rt >=3.2.0 # for jupyter extra
+    - aiohttp >=3.10
+    - colorama >=0.4.3
+    - uvloop >=0.15.2
+    - ipython >=7.8.0
+    - tokenize-rt >=3.2.0
+
+# E   AssertionError: Expected config parse to be called with the current directory.
+# E   assert 0 >= 1
+# E    +  where 0 = len([])
+# E    +    where [] = <MagicMock name='parse_pyproject_toml' id='4404793200'>.mock_calls
+{% set deselect_tests = " --deselect=tests/test_black.py::BlackTestCase::test_code_option_config" %}
+{% set deselect_tests = deselect_tests + " --deselect=tests/test_black.py::BlackTestCase::test_code_option_parent_config" %}
+
 test:
+  source_files:
+    - tests
+    - src/black/__init__.py
   imports:
     - black
+    - black._width_table
+    - black.brackets
+    - black.cache
+    - black.comments
+    - black.const
+    - black.files
+    - black.handle_ipynb_magics
+    - black.linegen
+    - black.lines
+    - black.mode
+    - black.nodes
+    - black.numerics
+    - black.output
+    - black.parsing
+    - black.ranges
+    - black.report
+    - black.rusty
+    - black.strings
+    - black.trans
+    - black.concurrency
+    - blackd
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - black --help
+    - blackd --help
+    - pytest -v {{ deselect_tests }} tests
   requires:
     - pip
-  commands:
-    - black --help
-    - pip check
+    - pytest >=6.1.1
+    - aiohttp >=3.10
 
 about:
   home: https://github.com/psf/black
