@@ -40,17 +40,11 @@ requirements:
     - ipython >=7.8.0
     - tokenize-rt >=3.2.0
 
-# E   AssertionError: Expected config parse to be called with the current directory.
-# E   assert 0 >= 1
-# E    +  where 0 = len([])
-# E    +    where [] = <MagicMock name='parse_pyproject_toml' id='4404793200'>.mock_calls
-{% set deselect_tests = " --deselect=tests/test_black.py::BlackTestCase::test_code_option_config" %}
-{% set deselect_tests = deselect_tests + " --deselect=tests/test_black.py::BlackTestCase::test_code_option_parent_config" %}
-
 test:
   source_files:
     - tests
     - src/black/__init__.py
+    - pyproject.toml
   imports:
     - black
     - black._width_table
@@ -79,7 +73,7 @@ test:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - black --help
     - blackd --help
-    - pytest -v {{ deselect_tests }} tests
+    - pytest -v tests
   requires:
     - pip
     - pytest >=6.1.1
