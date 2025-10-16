@@ -1,5 +1,5 @@
 {% set name = "black" %}
-{% set version = "25.1.0" %}
+{% set version = "25.9.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,9 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 33496d5cd1222ad73391352b4ae8da15253c5de89b93a80b3e2c8d9a19ec2666
-  patches:
-    - patches/0001-Fix-f-string-format-spec-CI-failure-4690.patch
+  sha256: 0474bca9a0dd1b51791fcc507a4e02078a1c63f6d4e4ae5544b9848c7adfb619
 
 build:
   number: 0
@@ -20,9 +18,6 @@ build:
   skip: True # [py<39]
 
 requirements:
-  build:
-    - patch  # [unix]
-    - m2-patch  # [win]
   host:
     - python
     - pip
@@ -36,6 +31,7 @@ requirements:
     - packaging >=22.0
     - pathspec >=0.9.0
     - platformdirs >=2
+    - pytokens >=0.1.10
     - tomli >=1.1.0  # [py<311]
     - typing_extensions >=4.0.1 # [py<311]
   run_constrained:
@@ -78,7 +74,7 @@ test:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - black --help
     - blackd --help
-    - pytest -v tests
+    - pytest -v tests -W ignore::DeprecationWarning:uvloop
   requires:
     - pip
     - pytest >=6.1.1
