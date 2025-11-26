@@ -41,6 +41,12 @@ requirements:
     - ipython >=7.8.0
     - tokenize-rt >=3.2.0
 
+# CI and symlinks?
+# OSError: [WinError 1314] A required privilege is not held by the client
+{% set tests_to_skip = "test_get_sources_symlink_and_force_exclude" %}                                             # [win]
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_symlink_outside_root" %}                   # [win]
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_filename_and_force_exclude_and_symlink" %} # [win]
+
 test:
   source_files:
     - tests
@@ -74,7 +80,8 @@ test:
     - black --help
     - blackd --help
     # -k ... is from pyproject.toml
-    - pytest -v tests -k "not incompatible_with_mypyc"
+    - pytest -v tests -k "not incompatible_with_mypyc"                                # [not win]
+    - pytest -v tests -k "not incompatible_with_mypyc" -k "not ({{ tests_to_skip }})" # [win]
   requires:
     - pip
     - pytest >=7
