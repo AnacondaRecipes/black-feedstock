@@ -1,13 +1,13 @@
 {% set name = "black" %}
-{% set version = "25.9.0" %}
+{% set version = "25.11.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 0474bca9a0dd1b51791fcc507a4e02078a1c63f6d4e4ae5544b9848c7adfb619
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 9a323ac32f5dc75ce7470501b887250be5005a01602e931a15e45593f70f6e08
 
 build:
   number: 0
@@ -15,13 +15,13 @@ build:
   entry_points:
     - black = black:patched_main
     - blackd = blackd:patched_main
-  skip: True # [py<39]
+  skip: true  # [py<39]
 
 requirements:
   host:
     - python
     - pip
-    - hatchling >=1.20.0
+    - hatchling >=1.27.0
     - hatch-vcs
     - hatch-fancy-pypi-readme
   run:
@@ -31,9 +31,9 @@ requirements:
     - packaging >=22.0
     - pathspec >=0.9.0
     - platformdirs >=2
-    - pytokens >=0.1.10
+    - pytokens >=0.3.0
     - tomli >=1.1.0  # [py<311]
-    - typing_extensions >=4.0.1 # [py<311]
+    - typing_extensions >=4.0.1  # [py<311]
   run_constrained:
     - aiohttp >=3.10
     - colorama >=0.4.3
@@ -41,11 +41,18 @@ requirements:
     - ipython >=7.8.0
     - tokenize-rt >=3.2.0
 
+# -k "not incompatible_with_mypyc is from pyproject.toml
+{% set tests_to_skip = "incompatible_with_mypyc" %}
+# CI and symlinks?
+# OSError: [WinError 1314] A required privilege is not held by the client
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_symlink_and_force_exclude" %}                         # [win]
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_symlink_outside_root" %}                   # [win]
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_filename_and_force_exclude_and_symlink" %} # [win]
+
 test:
   source_files:
     - tests
     - src/black/__init__.py
-    - pyproject.toml
   imports:
     - black
     - black._width_table
@@ -74,10 +81,10 @@ test:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - black --help
     - blackd --help
-    - pytest -v tests -W ignore::DeprecationWarning:uvloop
+    - pytest -v tests -k "not ({{ tests_to_skip }})"
   requires:
     - pip
-    - pytest >=6.1.1
+    - pytest >=7
     - aiohttp >=3.10
 
 about:
