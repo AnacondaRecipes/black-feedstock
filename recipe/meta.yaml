@@ -1,5 +1,9 @@
 {% set name = "black" %}
-{% set version = "25.11.0" %}
+{% set version = "26.1.0" %}
+{% set tests_to_skip = "incompatible_with_mypyc" %}
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_symlink_and_force_exclude" %}  # [win]
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_symlink_outside_root" %}  # [win]
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_filename_and_force_exclude_and_symlink" %}  # [win]
 
 package:
   name: {{ name|lower }}
@@ -7,7 +11,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 9a323ac32f5dc75ce7470501b887250be5005a01602e931a15e45593f70f6e08
+  sha256: d294ac3340eef9c9eb5d29288e96dc719ff269a88e27b396340459dd85da4c58
 
 build:
   number: 0
@@ -42,13 +46,8 @@ requirements:
     - tokenize-rt >=3.2.0
 
 # -k "not incompatible_with_mypyc is from pyproject.toml
-{% set tests_to_skip = "incompatible_with_mypyc" %}
 # CI and symlinks?
 # OSError: [WinError 1314] A required privilege is not held by the client
-{% set tests_to_skip = tests_to_skip + " or test_get_sources_symlink_and_force_exclude" %}                         # [win]
-{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_symlink_outside_root" %}                   # [win]
-{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_filename_and_force_exclude_and_symlink" %} # [win]
-
 test:
   source_files:
     - tests
