@@ -1,5 +1,5 @@
 {% set name = "black" %}
-{% set version = "25.11.0" %}
+{% set version = "26.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 9a323ac32f5dc75ce7470501b887250be5005a01602e931a15e45593f70f6e08
+  sha256: d294ac3340eef9c9eb5d29288e96dc719ff269a88e27b396340459dd85da4c58
 
 build:
   number: 0
@@ -15,21 +15,21 @@ build:
   entry_points:
     - black = black:patched_main
     - blackd = blackd:patched_main
-  skip: true  # [py<39]
+  skip: true  # [py<310]
 
 requirements:
   host:
-    - python
     - pip
-    - hatchling >=1.27.0
+    - python
     - hatch-vcs
+    - hatchling >=1.27.0
     - hatch-fancy-pypi-readme
   run:
     - python
     - click >=8.0.0
     - mypy_extensions >=0.4.3
     - packaging >=22.0
-    - pathspec >=0.9.0
+    - pathspec >=1.0.0
     - platformdirs >=2
     - pytokens >=0.3.0
     - tomli >=1.1.0  # [py<311]
