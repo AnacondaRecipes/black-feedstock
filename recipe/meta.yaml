@@ -1,5 +1,5 @@
 {% set name = "black" %}
-{% set version = "26.1.0" %}
+{% set version = "26.3.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: d294ac3340eef9c9eb5d29288e96dc719ff269a88e27b396340459dd85da4c58
+  sha256: 2c50f5063a9641c7eed7795014ba37b0f5fa227f3d408b968936e24bc0566b07
 
 build:
   number: 0
@@ -31,7 +31,7 @@ requirements:
     - packaging >=22.0
     - pathspec >=1.0.0
     - platformdirs >=2
-    - pytokens >=0.3.0
+    - pytokens >=0.4.0,<0.5.0
     - tomli >=1.1.0  # [py<311]
     - typing_extensions >=4.0.1  # [py<311]
   run_constrained:
