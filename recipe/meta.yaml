@@ -1,13 +1,20 @@
 {% set name = "black" %}
-{% set version = "26.5.1" %}
+{% set version = "26.10.0" %}
+{% set tests_to_skip = "incompatible_with_mypyc" %}
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_symlink_and_force_exclude" %}  # [win]
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_symlink_outside_root" %}  # [win]
+{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_filename_and_force_exclude_and_symlink" %}  # [win]
 
+# -k "not incompatible_with_mypyc is from pyproject.toml
+# CI and symlinks?
+# OSError: [WinError 1314] A required privilege is not held by the client
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: dd321f668053961824bcc1be1cc1df748b2d7e4fa28086b08331e577b0100a73
+  sha256: b3476ce71b494fc6e39d77e75488e8339a87583029bbf608416e955c83582bd6
 
 build:
   number: 0
@@ -21,7 +28,7 @@ requirements:
   host:
     - pip
     - python
-    - hatch-vcs
+    - hatch-vcs >=0.3.0
     - hatchling >=1.27.0
     - hatch-fancy-pypi-readme
   run:
@@ -31,24 +38,16 @@ requirements:
     - packaging >=22.0
     - pathspec >=1.0.0
     - platformdirs >=2
-    - pytokens >=0.4.0,<0.5.0
+    - pytokens >=0.4.0,<0.5.dev0
     - tomli >=1.1.0  # [py<311]
     - typing_extensions >=4.0.1  # [py<311]
   run_constrained:
     - aiohttp >=3.10
     - colorama >=0.4.3
-    - uvloop >=0.15.2 # [not win]
-    - winloop >=0.5.0 # [win]
+    - uvloop >=0.15.2  # [not win]
+    - winloop >=0.5.0  # [win]
     - ipython >=7.8.0
     - tokenize-rt >=3.2.0
-
-# -k "not incompatible_with_mypyc is from pyproject.toml
-{% set tests_to_skip = "incompatible_with_mypyc" %}
-# CI and symlinks?
-# OSError: [WinError 1314] A required privilege is not held by the client
-{% set tests_to_skip = tests_to_skip + " or test_get_sources_symlink_and_force_exclude" %}                         # [win]
-{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_symlink_outside_root" %}                   # [win]
-{% set tests_to_skip = tests_to_skip + " or test_get_sources_with_stdin_filename_and_force_exclude_and_symlink" %} # [win]
 
 test:
   source_files:
